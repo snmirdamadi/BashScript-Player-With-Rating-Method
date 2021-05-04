@@ -1,0 +1,26 @@
+#!/bin/bash
+
+function player(){
+name=`ls *.mp3 | shuf -n 1`
+vlc $name
+echo -e "Please Enter from 1 to 5 your rates-----${name}\n"
+read rate
+until [[ $((rate)) = $rate && $rate -lt 11 && $rate -gt 0 ]];do
+echo  -e "Please Enter from 1 to 5 your rates not ${rate}-----${name}\n"
+read rate
+done
+
+echo "${name} ${rate} \n" >> 'rates.txt' 
+#grep ${name} 'rates.txt' | awk '{ sum+= $2 }END{ print sum }'
+sum=0
+count=0
+grep ${name} rates.txt | (while read -r line; do
+temp=$(echo $line | awk '{ print $2 }')
+sum=$((sum+temp))
+count=$((count+1))
+done
+
+echo "TotalSum is:$sum and Number of Rates are:$count and average is: $((sum/count))")
+}
+
+player
